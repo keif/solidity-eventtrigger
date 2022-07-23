@@ -38,16 +38,3 @@ From there, follow the instructions on the hosted React app. It will walk you th
 - __Where can I find more resources?__
 
   This Box is a sweet combo of [Truffle](https://trufflesuite.com) and [Create React App](https://create-react-app.dev). Either one would be a great place to start!
-
-## Changes
-
-Doing just `unbox react` won't create the core files we need.
-Also, using the latest node version (v17 atm) will throw errors - downgraded to v14 for now (check .nvmrc)
-
-```javascript
-truffle init && truffle unbox react
-```
-
-You need to [connect Ganache to MetaMask](https://dapp-world.com/blogs/01/how-to-connect-ganache-with-metamask-and-deploy-smart-contracts-on-remix-without-1619847868947) (the default port isn't matching).
-
-Changed `truffle-config.js` to point to the correct port initialized in ganache.
