@@ -9,7 +9,7 @@ function EthProvider({ children }) {
   const init = useCallback(
     async artifacts => {
       if (artifacts && artifacts.length) {
-        const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
+        const web3 = new Web3(Web3.givenProvider || "ws://localhost:9545");
         const accounts = await web3.eth.requestAccounts();
         const networkID = await web3.eth.net.getId();
 
@@ -21,6 +21,7 @@ function EthProvider({ children }) {
         } catch (err) {
           console.error(err);
         }
+        // listenToPaymentEvent();
         dispatch({
           type: actions.init,
           data: { artifact: artifacts[0], web3, accounts, networkID, contract }
@@ -47,6 +48,7 @@ function EthProvider({ children }) {
   useEffect(() => {
     const events = ["chainChanged", "accountsChanged"];
     const handleChange = () => {
+      console.info(`handleChange`);
       init(state.artifacts);
     };
 

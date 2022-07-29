@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useEth from "../../contexts/EthContext/useEth";
 // import Contract from "./Contract";
 // import ContractBtns from "./ContractBtns";
@@ -65,6 +65,36 @@ function Demo() {
       Item Name: <input type="text" name="itemName" value={itemName} onChange={handleInputItemNameChange} />
       <button type="button" onClick={handleSubmit}>Create new Item</button>
     </>
+
+  useEffect(() => {
+    listenToPaymentEvent();
+    // remove listener when the component is unmounted
+    return () => {
+      state.contract?.events?.removeAllListeners('block')
+    }
+  }, [state]);
+
+  const listenToPaymentEvent = () => {
+    console.group(`listenToPaymentEvent`);
+    console.log(state?.contract?.events);
+    console.groupEnd();
+    if (state.contract?.events) {
+      console.log(`event is being monitored`);
+      state.contract.events.SupplyChainStep()
+        .on(`connected`, (subscriptionId) => console.log(`subscriptionId:`, subscriptionId))
+        .on(`data`, async function (evt) {
+          console.log(`on data evt:`, evt);
+          if (evt.returnValues._step === 1) {
+            const item = await state.contract.methods.items(evt.returnValues._itemIndex).call();
+            console.log(item);
+            alert("Item " + item._identifier + " was paid, deliver it now!");
+          };
+          console.log(evt);
+        })
+        .on(`changed`, (evt) => console.log(`changed event:`, evt))
+        .on(`error`, (err) => console.error(`supply chain step error:`, err));
+    }
+  }
 
   return (
     <div className="demo">
